@@ -520,28 +520,46 @@ p:last-child{ margin-bottom:0 }
   text-wrap:balance;
 }
 
-.logowall{
-  display:flex; flex-wrap:wrap;
-  align-items:center; justify-content:center;
-  gap:clamp(14px,2.2vw,30px);
+/* ── continuous left-scrolling logo loop ── */
+.logoloop{
   margin-top:clamp(38px,5.5vw,64px);
+  overflow:hidden;
+  /* Fade the ends so logos dissolve rather than getting chopped at the edge. */
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
 }
-.logowall li{ display:flex; align-items:center; justify-content:center }
-.logowall img{
-  height:clamp(24px,3.2vw,38px);
-  width:auto; max-width:118px;
+.logoloop__track{
+  display:flex;
+  width:max-content;
+  animation:logoloop 42s linear infinite;
+}
+/* -50% lands set 2 exactly where set 1 began, so the restart is invisible. */
+@keyframes logoloop{ to{ transform:translateX(-50%) } }
+
+/* Pause on hover so a logo can actually be looked at (and hovered). */
+.logoloop:hover .logoloop__track,
+.logoloop:focus-within .logoloop__track{ animation-play-state:paused }
+
+.logoloop__set{
+  display:flex; align-items:center; flex:none;
+  gap:clamp(30px,5vw,68px);
+  padding-right:clamp(30px,5vw,68px);   /* keeps spacing even across the seam */
+}
+.logoloop__set li{ display:flex; align-items:center; justify-content:center }
+.logoloop__set img{
+  height:clamp(26px,3.2vw,38px);
+  width:auto; max-width:none;
   object-fit:contain;
-  /* resting: desaturated and knocked back so the wall reads as one texture */
+  /* resting: desaturated so the row reads as one texture, not a clip-art wall */
   filter:grayscale(1);
   opacity:.52;
-  transform:translateX(0) scale(1);
-  transition:filter .45s var(--ease), opacity .45s var(--ease), transform .45s var(--ease);
+  transition:filter .4s var(--ease), opacity .4s var(--ease), transform .4s var(--ease);
 }
-.logowall li:hover img,
-.logowall li:focus-within img{
+.logoloop__set li:hover img,
+.logoloop__set li:focus-within img{
   filter:grayscale(0);
   opacity:1;
-  transform:translateX(-7px) scale(1.09);
+  transform:scale(1.12);
 }
 
 /* ── pull quote on the gold band ── */
@@ -573,9 +591,13 @@ p:last-child{ margin-bottom:0 }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .logowall img{ transition:filter .45s linear, opacity .45s linear }
-  .logowall li:hover img,
-  .logowall li:focus-within img{ transform:none }
+  /* Stop the loop and let the row wrap statically instead. */
+  .logoloop__track{ animation:none; width:100%; flex-wrap:wrap; justify-content:center }
+  .logoloop__set{ flex-wrap:wrap; justify-content:center }
+  .logoloop__set + .logoloop__set{ display:none }   /* the duplicate is only for looping */
+  .logoloop{ -webkit-mask-image:none; mask-image:none }
+  .logoloop__set li:hover img,
+  .logoloop__set li:focus-within img{ transform:none }
 }
 
 /* ═══════════ SERVICE ROWS ═══════════ */

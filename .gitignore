@@ -12,6 +12,12 @@ node_modules/
 # carries the reviewed ignore rules and IS tracked.
 .impeccable/hook.cache.json
 
+# ── image source originals ─────────────────────────────────
+# Full-resolution camera files (6000px, ~65MB). Kept on disk as the
+# master copies, but never committed — the web-sized derivatives in
+# assets/img/ are what the site actually loads.
+assets/img/opt/
+
 # ── OS noise ───────────────────────────────────────────────
 Thumbs.db
 ehthumbs.db

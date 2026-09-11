@@ -482,6 +482,102 @@ p:last-child{ margin-bottom:0 }
 }
 .logos li:hover{ border-color:var(--line-gold); color:var(--gold); transform:translateY(-2px) }
 
+/* ═══════════ CLIENT WALL ═══════════ */
+/* The one light section on the site. Brand logos are drawn for white
+   grounds — several of these (Chase, Capital One) are near-black and would
+   disappear on --ink, so the panel inverts to paper and curves into a deep
+   gold band. --gold is too light to carry cream text (1.9:1), hence the
+   darker --gold-band at 4.6:1. */
+.clients{
+  --paper:#F3EEE3;
+  /* Two related golds, both pinned by contrast rather than taste:
+     the band is the richest gold that still clears 4.5:1 against white
+     text (4.68:1); the eyebrow sits on paper, which needs a darker
+     value to clear the same bar (4.61:1). */
+  --gold-band:#9A6B15;
+  --gold-ink:#8F6220;
+  background:var(--gold-band);
+  position:relative;
+}
+.clients__panel{
+  background:var(--paper);
+  padding-block:clamp(56px,8vw,104px) clamp(78px,11vw,150px);
+  /* shallow ellipse: panel is full height at centre, shorter at the edges */
+  border-radius:0 0 50% 50% / 0 0 clamp(28px,5vw,72px) clamp(28px,5vw,72px);
+}
+.clients__in{ text-align:center }
+.clients .eyebrow{ color:var(--gold-ink) }
+
+.clients__title{
+  font-family:var(--f-disp);
+  font-weight:300;
+  font-size:clamp(27px,4.2vw,52px);
+  line-height:1.08;
+  letter-spacing:-.018em;
+  color:var(--ink);
+  max-width:24ch;
+  margin:0 auto;
+  text-wrap:balance;
+}
+
+.logowall{
+  display:flex; flex-wrap:wrap;
+  align-items:center; justify-content:center;
+  gap:clamp(14px,2.2vw,30px);
+  margin-top:clamp(38px,5.5vw,64px);
+}
+.logowall li{ display:flex; align-items:center; justify-content:center }
+.logowall img{
+  height:clamp(24px,3.2vw,38px);
+  width:auto; max-width:118px;
+  object-fit:contain;
+  /* resting: desaturated and knocked back so the wall reads as one texture */
+  filter:grayscale(1);
+  opacity:.52;
+  transform:translateX(0) scale(1);
+  transition:filter .45s var(--ease), opacity .45s var(--ease), transform .45s var(--ease);
+}
+.logowall li:hover img,
+.logowall li:focus-within img{
+  filter:grayscale(0);
+  opacity:1;
+  transform:translateX(-7px) scale(1.09);
+}
+
+/* ── pull quote on the gold band ── */
+.pullquote{
+  padding-block:clamp(52px,7.5vw,96px) clamp(56px,8vw,104px);
+  text-align:center;
+}
+.pullquote blockquote{
+  /* px, not ch: the blockquote inherits 16px, so a ch value here would be
+     measured against that rather than the 40px quote text inside it. */
+  margin:0 auto; max-width:660px;
+}
+.pullquote p{
+  font-family:var(--f-disp);
+  font-weight:300;
+  font-size:clamp(21px,3.4vw,40px);
+  line-height:1.16;
+  letter-spacing:-.014em;
+  color:#fff;
+  margin:0;
+  text-wrap:balance;
+}
+.pullquote cite{
+  display:block; margin-top:20px;
+  font-family:var(--f-body); font-style:normal;
+  font-size:13px; font-weight:500; letter-spacing:.04em;
+  color:#fff;
+  opacity:.88;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .logowall img{ transition:filter .45s linear, opacity .45s linear }
+  .logowall li:hover img,
+  .logowall li:focus-within img{ transform:none }
+}
+
 /* ═══════════ SERVICE ROWS ═══════════ */
 .srow{
   display:grid; grid-template-columns:1fr 1fr;

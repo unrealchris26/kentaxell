@@ -522,11 +522,16 @@ p:last-child{ margin-bottom:0 }
 
 /* ── continuous left-scrolling logo loop ── */
 .logoloop{
-  margin-top:clamp(38px,5.5vw,64px);
+  /* Centred window rather than full-bleed: shows ~5 logos at desktop and
+     loops the rest through, so it reads as a curated set, not a banner. */
+  max-width:min(860px, 100%);
+  margin:clamp(38px,5.5vw,64px) auto 0;
   overflow:hidden;
-  /* Fade the ends so logos dissolve rather than getting chopped at the edge. */
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
-          mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  /* Fade the ends so logos dissolve rather than getting chopped at the edge.
+     Wider fade than full-bleed needed — in a narrow window a hard edge is
+     much more noticeable. */
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent);
 }
 .logoloop__track{
   display:flex;
@@ -542,13 +547,15 @@ p:last-child{ margin-bottom:0 }
 
 .logoloop__set{
   display:flex; align-items:center; flex:none;
-  gap:clamp(30px,5vw,68px);
-  padding-right:clamp(30px,5vw,68px);   /* keeps spacing even across the seam */
+  gap:clamp(26px,3.2vw,44px);
+  padding-right:clamp(26px,3.2vw,44px);   /* keeps spacing even across the seam */
 }
 .logoloop__set li{ display:flex; align-items:center; justify-content:center }
 .logoloop__set img{
   height:clamp(26px,3.2vw,38px);
-  width:auto; max-width:none;
+  /* Cap the wide wordmarks (Chase, ConEd, Make-A-Wish run ~200px uncapped)
+     so no single logo dominates the narrower window. */
+  width:auto; max-width:150px;
   object-fit:contain;
   /* resting: desaturated so the row reads as one texture, not a clip-art wall */
   filter:grayscale(1);

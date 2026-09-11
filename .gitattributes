@@ -1,0 +1,17 @@
+# Normalise line endings so Windows checkouts don't produce noisy diffs.
+* text=auto eol=lf
+
+# Windows batch must keep CRLF or cmd.exe can mis-parse it.
+*.cmd text eol=crlf
+
+# Never touch binaries.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.mp4  binary
+*.webm binary
+*.otf  binary
+*.ttf  binary
+*.woff binary
+*.woff2 binary

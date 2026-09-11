@@ -1,0 +1,41 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-10T08:42:45.555Z",
+        "reason": "the tilted gold marquee band is the signature element of the reference layout the user supplied as the design to follow; it is aria-hidden and fully disabled under prefers-reduced-motion"
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-10T08:42:45.825Z",
+        "reason": "body overflow-x:hidden is required by that same marquee: the bands are 114% wide and rotated to bleed past the viewport"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-10T09:13:32.192Z",
+        "reason": "all 7 hits verified false by reading the CSS: .panel padding clamp(34-66px)/clamp(22-58px), .quote clamp(24-34px), .signup padding-block clamp(44-74px), .footer__base 20px, .utilitybar__in 9px, .faq summary 17px/clamp(16-26px), .faq__body clamp(16-26px)/20px. The detector cannot resolve clamp() and reads full-bleed wrappers (.utilitybar, .marquee, details) as unpadded when the inset is on the child. Rule stays live in every other file."
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument sans",
+        "createdAt": "2026-09-11T08:33:48.720Z",
+        "reason": "Claude's design decision, disclosed to user and not contested: body face is deliberately quiet because all the character in this design is carried by Bricolage Grotesque on the display side. The rule flagged Inter before the swap and would flag any neutral third choice; chasing it would make the site worse, not more distinctive. Display font is unaffected and still audited."
+      }
+    ]
+  }
+}

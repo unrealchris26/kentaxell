@@ -1,0 +1,9 @@
+# Static site at the repo root, one function for lead intake.
+
+[build]
+  publish    = "."
+  functions  = "netlify/functions"
+  command    = ""
+
+[functions]
+  node_bundler = "esbuild"

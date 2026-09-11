@@ -1,0 +1,19 @@
+# ── secrets ────────────────────────────────────────────────
+# .env holds the live GHL token. Never commit it.
+.env
+.env.*
+!.env.example
+
+# ── build / tooling ────────────────────────────────────────
+.netlify/
+node_modules/
+
+# Design-hook cache churns on every edit; the config beside it
+# carries the reviewed ignore rules and IS tracked.
+.impeccable/hook.cache.json
+
+# ── OS noise ───────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store

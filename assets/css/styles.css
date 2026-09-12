@@ -1180,12 +1180,18 @@ p:last-child{ margin-bottom:0 }
 /* The generic `.field label` rule is uppercase, 10px and heavily tracked —
    fine for "EVENT DATE", unreadable for a sentence of consent text. Consent
    has to be in clear, plain, normally-cased language, so reset all of it. */
-.consent__opt,
-.consent__opt span{
+/* Specificity matters here: `.field label` is (0,1,1) and `.field label span`
+   is (0,1,2), so a bare `.consent__opt span` (0,1,1) loses and the tracking
+   leaks through. Scoping to `.consent` makes these (0,2,0)/(0,2,1) and wins. */
+.consent .consent__opt,
+.consent .consent__opt span{
   font-family:var(--f-body);
   text-transform:none;
   letter-spacing:normal;
   font-weight:400;
+  font-size:14px;          /* .field label is 10px — far too small for consent */
+  line-height:1.55;
+  color:var(--cream-70);
 }
 .consent__opt{
   display:flex; align-items:flex-start; gap:12px;

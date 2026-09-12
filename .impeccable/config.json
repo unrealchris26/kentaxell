@@ -35,6 +35,24 @@
         "value": "instrument sans",
         "createdAt": "2026-09-11T08:33:48.720Z",
         "reason": "Claude's design decision, disclosed to user and not contested: body face is deliberately quiet because all the character in this design is carried by Bricolage Grotesque on the display side. The rule flagged Inter before the swap and would flag any neutral third choice; chasing it would make the site worse, not more distinctive. Display font is unaffected and still audited."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "privacy-policy/index.html"
+        ],
+        "createdAt": "2026-09-12T02:29:20.383Z",
+        "reason": "Claude's decision: the left-bar element is the .todo admonition block marking placeholders the owner must fill before launch. The left accent bar is the long-standing documentation admonition pattern (MDN, docs sites), not a hero-card side tab, and its whole job is to be impossible to miss. Deliberately loud, and removed when the placeholders are filled."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "terms-and-conditions/index.html"
+        ],
+        "createdAt": "2026-09-12T02:29:20.732Z",
+        "reason": "Same .todo admonition blocks as privacy-policy: left accent bar marks unfinished legal content the owner must supply. Documentation admonition pattern, intentionally conspicuous, temporary."
       }
     ]
   }

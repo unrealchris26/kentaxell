@@ -1,4 +1,8 @@
 # Static site at the repo root, one function for lead intake.
+#
+# The domain is registered at GoDaddy; only DNS points here. See README
+# "Deploying" for the records. Netlify issues and renews the certificate,
+# and redirects www → apex automatically once the primary domain is set.
 
 [build]
   publish    = "."
@@ -7,3 +11,40 @@
 
 [functions]
   node_bundler = "esbuild"
+
+# ── headers ─────────────────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options        = "SAMEORIGIN"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+# Images, video and fonts are content-addressed by name and rarely change.
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/assets/vids/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CSS and JS filenames carry no hash, so they must revalidate or an edit
+# will not reach people who have already visited.
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

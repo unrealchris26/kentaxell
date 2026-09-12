@@ -2,24 +2,41 @@
 
 Static marketing site built to convert enquiries into bookings. No build step and no
 front-end dependencies. Both forms feed GoHighLevel through a single serverless
-function, so deploy to a host that runs functions — Netlify as configured here,
-or Cloudflare Pages / Vercel with the handler moved and `ENDPOINT` in
-`assets/js/main.js` repointed.
+function, so it needs a host that runs functions — Netlify as configured here, with
+the domain staying at GoDaddy and only DNS pointing over. See **Deploying** below.
+
+Cloudflare Pages or Vercel work equally well: move `netlify/functions/lead.mjs` to
+their functions directory and repoint `ENDPOINT` in `assets/js/main.js`. GoDaddy's own
+shared hosting does not — cPanel runs PHP, not Node.
 
 ```
 kent-axell-site/
 ├── index.html
+├── privacy-policy/index.html
+├── terms-and-conditions/index.html
 ├── assets/
 │   ├── css/styles.css
 │   ├── js/main.js
-│   └── img/            ← 15 photos from the supplied media folder
+│   ├── fonts/
+│   ├── vids/showreel.mp4
+│   └── img/                 ← photos + favicon.svg
 ├── netlify/
 │   └── functions/
-│       └── lead.mjs    ← form intake → GoHighLevel
-├── netlify.toml
+│       └── lead.mjs         ← form intake → GoHighLevel
+├── tools/
+│   └── optimize-images.mjs  ← not yet run; see "Compress the images"
+├── robots.txt
+├── sitemap.xml
+├── netlify.toml             ← publish dir, headers, caching
+├── serve.cmd
 ├── .env.example
 └── README.md
 ```
+
+`assets/img/opt/` holds the full-resolution camera originals. It is gitignored, so a
+Git-connected deploy never uploads it — which is the reason to deploy from Git rather
+than with `netlify deploy --dir .`, since the CLI would push all 65 MB of it to a
+public URL.
 
 Preview locally:
 
@@ -151,37 +168,134 @@ contact is created and its failure is logged but never fails the request. GHL on
 lets you map webhook fields after it has seen one real request, so send the curl
 above before opening the mapping UI.
 
-### 2. Replace the placeholder content
+### 2. Replace the remaining placeholder content
 
-Everything below is written to the right length and tone — swap the words, keep the
-structure and nothing will reflow badly.
+Contact details, social links and the legal pages are now real. What is left:
 
-- **Contact details** — `+1 (702) 555-0100` and `book@kentaxell.com` are made up.
-  They appear in the utility bar, the booking section and the footer.
 - **Testimonials** — three placeholder quotes marked with an HTML comment above them.
   Replace with real, attributable client quotes before launch.
-- **Client logos** — ten `Logo` tiles in the references panel. Swap each `<li>Logo</li>
-  ` for `<li><img src="assets/img/logos/acme.svg" alt="Acme"></li>`.
-- **Showreel** — the three video cards are images with a play button that currently
-  link to `#contact`. Point them at real YouTube/Vimeo URLs, or swap in a lightbox.
-- **Social links** — Instagram and YouTube in the footer are `#`.
-- **Legal** — Privacy and Imprint links are `#`.
+- **Client logos** — the references panel. Swap each `<li>Logo</li>` for
+  `<li><img src="assets/img/logos/acme.svg" alt="Acme"></li>`. `Ford_Logo_2003-2017.png`,
+  `Xerox-Logo-2008.png` and `2560px-ConEd_logo.svg.png` are sitting in `assets/img/`
+  unused — they are presumably meant for this.
 
 ### 3. Compress the images
 
-`assets/img/` is **9.4 MB**. That is the one thing that will hurt this site. The worst
-offender is `kent-portrait.png` at 2.5 MB.
+`assets/img/` is **17 MB across the files the pages actually reference**, and
+`kent-portrait.png` alone is 2.4 MB. This is the one thing that will hurt the site.
 
-No image tooling was available on this machine, so the originals were copied as-is.
-Run them through [Squoosh](https://squoosh.app) or:
+No image tooling was available on this machine, so `tools/optimize-images.mjs` is
+written but has never been run. It needs `sharp`:
 
 ```bash
-# WebP at ~82% typically takes this folder to well under 1.5 MB
-for f in assets/img/*.jpg; do cwebp -q 82 "$f" -o "${f%.jpg}.webp"; done
+npm install sharp --no-save
+node tools/optimize-images.mjs            # write .webp beside each original
+node tools/optimize-images.mjs --rewrite  # ...and repoint the three pages at them
 ```
 
-Then either rename the references in `index.html`, or use `<picture>` with a JPEG
-fallback. Keep `kent-portrait` as PNG or WebP — it needs its transparency.
+It caps width at 2000px, encodes WebP at q82, never deletes an original, and skips
+anything already current, so re-running is free. Expect 17 MB → roughly 2 MB. Check
+that `kent-portrait` still has its transparency, then the originals can go.
+
+`assets/vids/showreel.mp4` is 7.7 MB but carries `preload="none"`, so it only
+downloads when someone actually presses play. Leave it.
+
+---
+
+## Deploying — GoDaddy domain, Netlify hosting
+
+The domain `kentaxell.com` stays registered at GoDaddy. Only DNS points at Netlify,
+which serves the files and runs `netlify/functions/lead.mjs`. GoDaddy's own shared
+hosting cannot run that function — cPanel serves PHP, not Node — so the forms would go
+dead there.
+
+Netlify's free tier covers this comfortably: 100 GB bandwidth and 125k function calls
+a month.
+
+### 1. Connect the repo
+
+The site is already a git repo pointing at `github.com/unrealchris26/kentaxell`. In
+Netlify: Add new site → Import an existing project → GitHub → that repo. Leave the
+build command empty and the publish directory as `.`; `netlify.toml` already declares
+both, along with the functions directory, cache and security headers.
+
+Deploy from Git rather than `netlify deploy --dir .`. Git honours `.gitignore`, so the
+65 MB of originals in `assets/img/opt/` stay off the public server — the CLI's
+`--dir .` would upload them, and anything in the publish directory is downloadable by
+anyone who guesses the URL.
+
+Then set `GHL_TOKEN` and `GHL_LOCATION_ID` under Site configuration → Environment
+variables and trigger a redeploy. Functions do not pick up new variables until they
+do.
+
+Confirm the page renders and the booking form reaches GHL on the
+`*.netlify.app` URL **before** touching DNS. Debugging hosting and DNS at the same
+time is how a weekend disappears.
+
+### 2. Point GoDaddy at it
+
+In Netlify: Domain management → Add a domain → `kentaxell.com`. It will see the domain
+is registered elsewhere and offer two routes.
+
+**Option A — keep DNS at GoDaddy** (recommended; leaves any email untouched)
+
+GoDaddy → Domain Portfolio → `kentaxell.com` → DNS → Manage Zone. Edit the existing
+records rather than adding duplicates:
+
+| Type | Name | Value | TTL |
+|---|---|---|---|
+| A | `@` | `75.2.60.5` | 600 |
+| CNAME | `www` | `<your-site>.netlify.app` | 600 |
+
+Delete GoDaddy's parked-page `A @` record if a second one remains, and turn off Domain
+Forwarding if it is on — forwarding silently overrides the A record.
+
+Check the A record against Netlify's dashboard before pasting it. `75.2.60.5` is their
+published load-balancer address, but it is theirs to change and the domain screen
+shows the current value.
+
+**Option B — move DNS to Netlify**
+
+Netlify gives you four nameservers (`dns1.p0X.nsone.net` …). Enter them at GoDaddy
+under Nameservers → Change → I'll use my own. Simpler afterwards, and Netlify manages
+the apex record for you.
+
+The catch: this moves *every* record, not just the website. If `kentaxell.com` carries
+email — Microsoft 365 through GoDaddy, or anything with MX records — those must be
+recreated in Netlify DNS first or mail stops. The contact address on this site is a
+gmail.com one, so there may be nothing to move; check the GoDaddy zone for MX records
+before choosing this route.
+
+### 3. HTTPS and the redirect
+
+Set `kentaxell.com` as the **primary domain** in Netlify, not `www`. Netlify then
+issues a Let's Encrypt certificate automatically and 301s `www` → apex, matching the
+canonical URLs in the pages.
+
+Certificate provisioning needs DNS to have propagated. If the button is greyed out,
+wait and retry rather than re-adding the domain. GoDaddy edits usually take 10-30
+minutes; 48 hours is the worst case, not the expected one.
+
+### 4. Check it
+
+```bash
+nslookup kentaxell.com                        # answers 75.2.60.5
+curl -sI https://kentaxell.com | head -1      # HTTP/2 200
+curl -sI https://www.kentaxell.com | head -1  # HTTP/2 301
+```
+
+Then submit the real booking form in a browser and confirm the contact lands in GHL.
+The function is the one part DNS cannot break and hosting can.
+
+### Afterwards
+
+Every push to `main` redeploys; pull requests get preview URLs; any past deploy can be
+rolled back from the Deploys tab.
+
+Two things to remember when updating: `sitemap.xml` carries hardcoded `lastmod` dates,
+and CSS/JS filenames have no content hash — which is why `netlify.toml` marks them
+`must-revalidate`. Do not raise that to a long max-age without adding hashed
+filenames, or an edit will not reach anyone who has already visited.
 
 ---
 

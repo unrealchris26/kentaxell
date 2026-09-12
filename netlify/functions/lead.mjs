@@ -83,9 +83,27 @@ export default async (req) => {
   const isNewsletter = d.source === 'Website — newsletter';
   const { firstName, lastName } = splitName(clean(d.name));
 
+  /* ── Marketing consent ────────────────────────────────────────────────
+     A booking enquiry is NOT consent to marketing. The only two things that
+     grant it are:
+       1. submitting the newsletter form, whose sole purpose is marketing, or
+       2. ticking the separate optional box on the booking form.
+     Anything else gets the enquiry tags alone and must not be marketed to.
+     Never infer consent from the presence of an email address.            */
+  const marketingConsent = isNewsletter || d.marketingConsent === 'yes';
+
   const customFields = CUSTOM_FIELDS
     .map(([key, from]) => ({ key, field_value: clean(d[from]) }))
     .filter((f) => f.field_value);
+
+  const tags = isNewsletter
+    ? ['newsletter', 'website']
+    : ['booking-enquiry', 'website'];
+
+  /* Tag rather than a custom field so no dashboard setup is needed — an
+     undefined custom-field key makes the whole upsert fail. Use this tag as
+     the segment your marketing sends to; never send to 'website'. */
+  if (marketingConsent) tags.push('marketing-consent');
 
   const payload = {
     locationId: GHL_LOCATION_ID,
@@ -94,9 +112,7 @@ export default async (req) => {
     lastName,
     phone: toE164(clean(d.phone)),
     source: clean(d.source) || 'Website',
-    tags: isNewsletter
-      ? ['newsletter', 'website']
-      : ['booking-enquiry', 'website'],
+    tags,
     customFields
   };
 
@@ -131,6 +147,10 @@ export default async (req) => {
           ...d,
           phone: payload.phone,
           contactId: contact?.contact?.id,
+          /* Consent evidence: you must be able to show WHAT was consented to
+             and WHEN. Persist these two fields wherever the webhook lands. */
+          marketingConsent,
+          consentRecordedAt: new Date().toISOString(),
           receivedAt: new Date().toISOString()
         })
       });

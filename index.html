@@ -24,7 +24,7 @@
 <!-- ══════════ UTILITY BAR ══════════ -->
 <div class="utilitybar">
   <div class="wrap utilitybar__in">
-    <a class="utilitybar__item" href="tel:+17025550100">
+    <a class="utilitybar__item" href="tel:+12074583115">
       <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
       +1 207-458-3115
     </a>
@@ -576,6 +576,27 @@
         <textarea id="bMsg" name="message" rows="4" placeholder="Venue, guest count, timings, anything Kent should know…"></textarea>
       </div>
 
+      <!-- Marketing consent is SEPARATE and OPTIONAL. Sending an enquiry must
+           never be treated as agreeing to marketing, so this box is unticked,
+           is not required, and never blocks submission. -->
+      <div class="field field--full consent">
+        <label class="consent__opt" for="bMarketing">
+          <input type="checkbox" id="bMarketing" name="marketingConsent" value="yes">
+          <span>
+            Optional &mdash; email me occasionally about new dates and shows.
+            You can unsubscribe at any time. Leaving this unticked will not
+            affect your enquiry.
+          </span>
+        </label>
+
+        <p class="consent__notice">
+          Kent uses the details above only to reply to your enquiry and arrange a
+          booking. They are stored in his customer relationship system. See the
+          <a href="privacy-policy/">Privacy Policy</a> for who processes them, how
+          long they are kept and what your rights are.
+        </p>
+      </div>
+
       <div class="field field--full book__submit">
         <button class="btn btn--gold" type="submit">Send enquiry</button>
         <p class="book__msg" id="bookMsg" role="status" aria-live="polite"></p>
@@ -601,6 +622,19 @@
       <input id="email" type="email" name="email" placeholder="Email address" required autocomplete="email">
       <button class="btn btn--gold" type="submit">Join the list</button>
       <p class="signup__msg" id="signupMsg" role="status" aria-live="polite"></p>
+
+      <!-- This form's ONLY purpose is marketing, so submitting it is itself the
+           affirmative act of consent. A separate "I consent to marketing" box next
+           to a button labelled "Join the list" would be redundant. What is required
+           is that the user is told plainly what they are agreeing to and how to get
+           out of it, which is what this notice does. -->
+      <p class="consent__notice signup__consent">
+        By subscribing you agree to receive occasional marketing emails from Kent
+        Axell. Your email address is stored in his customer relationship system and is
+        not sold or shared for anyone else&rsquo;s marketing. Unsubscribe at any time
+        using the link in any email. See the
+        <a href="privacy-policy/">Privacy Policy</a>.
+      </p>
     </form>
   </div>
 </section>
@@ -666,7 +700,10 @@
 
   <div class="wrap footer__base">
     <p>© <span id="yr">2026</span> Kent Axell · Psychological Illusionist. All rights reserved.</p>
-    <p><a href="#">Privacy</a> · <a href="#">Imprint</a></p>
+    <p>
+      <a href="privacy-policy/">Privacy Policy</a> ·
+      <a href="terms-and-conditions/">Terms &amp; Conditions</a>
+    </p>
   </div>
 </footer>
 

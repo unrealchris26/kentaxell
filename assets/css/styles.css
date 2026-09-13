@@ -1095,6 +1095,10 @@ p:last-child{ margin-bottom:0 }
 .legal__body p,
 .legal__body li{ color:var(--cream-70); font-size:15.5px }
 .legal__body a{ color:var(--gold-lite); text-decoration:underline; text-underline-offset:3px }
+/* buttons are links inside .legal__body too — they must not inherit the rule above */
+.legal__body a.btn{ text-decoration:none }
+.legal__body a.btn--gold{ color:#14100A }
+.legal__body a.btn--ghost{ color:var(--cream) }
 .legal__body a:hover{ color:var(--gold) }
 
 .legal__body ul{ margin:0 0 1.05em; display:grid; gap:9px }

@@ -48,3 +48,46 @@
   for = "/assets/js/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# ── Block source and config from being served ──────────────────────────────
+# publish = "." serves the repo root, so without these the function source,
+# netlify.toml, .env.example and the README are all publicly readable.
+# No secrets leak (the token lives in env vars) but there is no reason to
+# expose the server code or the API shape.
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/netlify.toml"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.env*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/README.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/serve.cmd"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# The 65MB of camera originals are gitignored, so a GitHub-linked deploy
+# never uploads them. This is belt-and-braces if anyone CLI-deploys.
+[[redirects]]
+  from = "/assets/img/opt/*"
+  to = "/404.html"
+  status = 404
+  force = true

@@ -699,26 +699,43 @@ p:last-child{ margin-bottom:0 }
 .quote:hover{ border-color:var(--line-gold); transform:translateY(-3px) }
 .stars{ color:var(--gold); font-size:14px; letter-spacing:.22em }
 .quote p{ color:var(--cream-70); font-size:14.5px; font-weight:400; line-height:1.75; flex:1 }
+/* photos are their own row — clip the scale-up so it does not bleed */
+.quote{ overflow:hidden }
 .quote footer{ display:flex; align-items:center; gap:12px; padding-top:14px; border-top:1px solid var(--line) }
 
 /* Generated initials rather than the reviewers' Google profile photos — those
    are personal images we have no licence to republish, and they are only
    available at screenshot resolution. Google itself falls back to initials. */
-/* Selector must out-rank `.quote footer span` (0,1,2), which otherwise wins
-   and paints the initials in small tracked gold instead of dark. */
+/* Real Google profile pictures. 72px source shown at 38px, so it stays crisp
+   on 2x displays. Some are photos, some are Google's own initial circles. */
 .quote footer .avatar{
   flex:none;
   width:38px; height:38px;
   border-radius:50%;
-  display:grid; place-items:center;
-  background:linear-gradient(145deg, var(--gold) 0%, var(--gold-deep) 100%);
-  color:#14100A;
-  font-family:var(--f-disp);
-  font-size:13px; font-weight:800;
-  letter-spacing:.01em;
-  text-transform:uppercase;
-  box-shadow:0 1px 0 rgba(255,255,255,.25) inset;
+  object-fit:cover;
+  background:var(--ink-2);
 }
+
+/* Photos attached to a review, laid out like the Google listing they came
+   from: two side by side, or one full width. */
+.quote__photos{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:4px;
+}
+.quote__photos--one{ grid-template-columns:1fr }
+.quote__photos img{
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+  border-radius:3px;
+  background:var(--ink-2);
+  transition:transform .5s var(--ease);
+}
+/* the single landscape shot should not be cropped to a portrait tile */
+.quote__photos--one img{ aspect-ratio:16/11 }
+.quote:hover .quote__photos img{ transform:scale(1.03) }
 .quote__who{ display:flex; flex-direction:column; gap:2px; min-width:0 }
 .quote footer b{
   font-family:var(--f-disp); font-size:13px; font-weight:700;

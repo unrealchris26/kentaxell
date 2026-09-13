@@ -356,7 +356,32 @@ p:last-child{ margin-bottom:0 }
   font-weight:800; text-transform:uppercase; letter-spacing:-.016em;
   white-space:nowrap;
 }
-.marquee__set i{ font-style:normal; font-size:13px; opacity:.55 }
+/* Separator asterisk, drawn rather than typed. U+2733 (✳) has an emoji
+   presentation that iOS renders as a green square, and the text variation
+   selector is not reliably honoured — so no character is used at all.
+   Three bars at 60° give a six-spoke asterisk in currentColor, identical on
+   every platform, with the weight set here rather than by a font. */
+.marquee__set i{
+  flex:none;
+  position:relative;
+  display:block;
+  /* scales with the band text, which is clamp(18px,2.6vw,33px) */
+  width:clamp(12px,1.45vw,18px);
+  height:clamp(2.8px,.34vw,4.2px);
+  border-radius:2px;
+  background:currentColor;
+  opacity:.7;
+  font-size:0;              /* belt-and-braces: no glyph can render */
+}
+.marquee__set i::before,
+.marquee__set i::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  background:currentColor;
+}
+.marquee__set i::before{ rotate:60deg }
+.marquee__set i::after{ rotate:120deg }
 
 /* ═══════════ INTRO ═══════════ */
 .intro__grid{

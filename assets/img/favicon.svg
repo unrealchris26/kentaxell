@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kent Axell">
-  <rect width="64" height="64" rx="13" fill="#0B120E"/>
-  <!-- K, drawn as paths so it does not depend on a font being available -->
-  <g fill="none" stroke="#D9A94B" stroke-width="7.5" stroke-linecap="square">
-    <path d="M21 14v36"/>
-    <path d="M24.5 33 45 14"/>
-    <path d="M24.5 33 46.5 50"/>
-  </g>
-</svg>

@@ -866,6 +866,28 @@ p:last-child{ margin-bottom:0 }
   background-repeat:no-repeat;
 }
 .field select option{ background:var(--ink-2); color:var(--cream) }
+
+/* ── phone: country code + national number as one joined control ── */
+.phonewrap{ display:flex; min-width:0 }
+.phonewrap select{
+  flex:0 0 auto;
+  width:auto;
+  max-width:132px;
+  padding-right:34px;                 /* room for the arrow */
+  border-radius:var(--r) 0 0 var(--r);
+  border-right-color:transparent;     /* the two controls share one seam */
+  /* Only the dialling code is shown once collapsed — the country name would
+     not fit, and the code is the part that matters. */
+  text-overflow:ellipsis;
+}
+.phonewrap input{
+  flex:1 1 auto;
+  min-width:0;
+  border-radius:0 var(--r) var(--r) 0;
+}
+/* whichever half has focus draws the full outline, so the seam never splits */
+.phonewrap select:focus{ border-right-color:var(--gold); z-index:1; position:relative }
+.phonewrap input:focus{ margin-left:-1px; padding-left:16px }
 .field input:focus,
 .field select:focus,
 .field textarea:focus{

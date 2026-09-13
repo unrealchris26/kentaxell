@@ -114,6 +114,23 @@
     var out = {};
     new FormData(form).forEach(function (v, k) { out[k] = v; });
     out.page = window.location.pathname;
+
+    /* The phone field is a country-code <select> plus a national number.
+       Join them into one E.164 value, because that is what the handler and
+       GoHighLevel expect — GHL rejects anything else and SMS then fails
+       silently. If someone types a full international number starting with
+       '+', trust that instead: their country may not be in the list. */
+    if ('phoneNumber' in out || 'phoneCountry' in out) {
+      var raw = String(out.phoneNumber || '').trim();
+      if (raw.charAt(0) === '+') {
+        out.phone = raw.replace(/[^\d+]/g, '');
+      } else {
+        var digits = raw.replace(/\D/g, '');
+        out.phone = digits ? (out.phoneCountry || '+1') + digits : '';
+      }
+      delete out.phoneNumber;
+      delete out.phoneCountry;
+    }
     return out;
   };
 
@@ -172,7 +189,7 @@
       input.value = '';
       say('Thank you — you are on the list.', true);
     }).catch(function () {
-      say('Something went wrong. Please email book@kentaxell.com.', false);
+      say('Something went wrong. Please email kentaxell@gmail.com.', false);
     }).then(function () { lock(false); });
   });
 
@@ -194,7 +211,7 @@
       form.reset();
       say('Enquiry received — Kent will reply within one business day.', true);
     }).catch(function () {
-      say('Something went wrong. Please email book@kentaxell.com.', false);
+      say('Something went wrong. Please email kentaxell@gmail.com.', false);
     }).then(function () { lock(false); });
   });
 

@@ -632,9 +632,61 @@
         <label for="bEmail">Email</label>
         <input id="bEmail" name="email" type="email" required autocomplete="email" placeholder="you@company.com">
       </div>
-      <div class="field">
+      <div class="field field--phone">
         <label for="bPhone">Phone <span>(optional)</span></label>
-        <input id="bPhone" name="phone" type="tel" autocomplete="tel" placeholder="+1 (702) 000-0000">
+        <div class="phonewrap">
+          <label class="sr-only" for="bPhoneCC">Country dialling code</label>
+          <select id="bPhoneCC" name="phoneCountry" autocomplete="tel-country-code">
+            <option value="+1" selected>+1 United States</option>
+            <option value="+1"None>+1 Canada</option>
+            <option value="+44"None>+44 United Kingdom</option>
+            <option value="+61"None>+61 Australia</option>
+            <option value="+353"None>+353 Ireland</option>
+            <option value="+64"None>+64 New Zealand</option>
+            <option value="+49"None>+49 Germany</option>
+            <option value="+33"None>+33 France</option>
+            <option value="+34"None>+34 Spain</option>
+            <option value="+39"None>+39 Italy</option>
+            <option value="+31"None>+31 Netherlands</option>
+            <option value="+32"None>+32 Belgium</option>
+            <option value="+41"None>+41 Switzerland</option>
+            <option value="+43"None>+43 Austria</option>
+            <option value="+46"None>+46 Sweden</option>
+            <option value="+47"None>+47 Norway</option>
+            <option value="+45"None>+45 Denmark</option>
+            <option value="+358"None>+358 Finland</option>
+            <option value="+48"None>+48 Poland</option>
+            <option value="+351"None>+351 Portugal</option>
+            <option value="+420"None>+420 Czechia</option>
+            <option value="+30"None>+30 Greece</option>
+            <option value="+90"None>+90 Turkey</option>
+            <option value="+52"None>+52 Mexico</option>
+            <option value="+55"None>+55 Brazil</option>
+            <option value="+54"None>+54 Argentina</option>
+            <option value="+56"None>+56 Chile</option>
+            <option value="+57"None>+57 Colombia</option>
+            <option value="+81"None>+81 Japan</option>
+            <option value="+86"None>+86 China</option>
+            <option value="+852"None>+852 Hong Kong</option>
+            <option value="+65"None>+65 Singapore</option>
+            <option value="+82"None>+82 South Korea</option>
+            <option value="+91"None>+91 India</option>
+            <option value="+63"None>+63 Philippines</option>
+            <option value="+62"None>+62 Indonesia</option>
+            <option value="+60"None>+60 Malaysia</option>
+            <option value="+66"None>+66 Thailand</option>
+            <option value="+84"None>+84 Vietnam</option>
+            <option value="+972"None>+972 Israel</option>
+            <option value="+971"None>+971 United Arab Emirates</option>
+            <option value="+966"None>+966 Saudi Arabia</option>
+            <option value="+974"None>+974 Qatar</option>
+            <option value="+27"None>+27 South Africa</option>
+            <option value="+234"None>+234 Nigeria</option>
+            <option value="+254"None>+254 Kenya</option>
+          </select>
+          <input id="bPhone" name="phoneNumber" type="tel" inputmode="tel"
+                 autocomplete="tel-national" placeholder="702 000 0000">
+        </div>
       </div>
       <div class="field">
         <label for="bDate">Event date</label>

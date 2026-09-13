@@ -53,6 +53,24 @@
         ],
         "createdAt": "2026-09-12T02:29:20.732Z",
         "reason": "Same .todo admonition blocks as privacy-policy: left accent bar marks unfinished legal content the owner must supply. Documentation admonition pattern, intentionally conspicuous, temporary."
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "404.html"
+        ],
+        "createdAt": "2026-09-13T01:26:31.253Z",
+        "reason": "404.html contains zero marquee/animated markup (grep -icE 'marquee|logoloop|animation' = 0 matches). The detector is reading the shared assets/css/styles.css, where index.html's marquee and logoloop rules live. Nothing auto-scrolls on this page."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "404.html"
+        ],
+        "createdAt": "2026-09-13T01:26:31.535Z",
+        "reason": "the only padding on 404.html is padding-block:clamp(70px,12vw,140px) on <main>, which resolves to 70-140px - the opposite of cramped. Same clamp() resolution failure already verified and suppressed for index.html."
       }
     ]
   }

@@ -1130,26 +1130,6 @@ p:last-child{ margin-bottom:0 }
 }
 .legal__body tr:last-child td{ border-bottom:0 }
 
-/* Unmissable markers for anything the owner still has to supply. */
-.todo{
-  display:block;
-  margin:0 0 1.05em;
-  padding:14px 18px;
-  background:rgba(217,169,75,.10);
-  border-left:3px solid var(--gold);
-  border-radius:0 var(--r) var(--r) 0;
-  color:var(--cream);
-  font-size:14.5px;
-}
-.todo b{
-  display:block;
-  font-family:var(--f-disp); font-size:11px; font-weight:700;
-  text-transform:uppercase; letter-spacing:.16em; color:var(--gold);
-  margin-bottom:5px;
-}
-.todo--legal{ background:rgba(111,182,200,.10); border-left-color:var(--teal) }
-.todo--legal b{ color:var(--teal) }
-
 .legal__toc{
   margin:0 0 clamp(34px,5vw,52px);
   padding:clamp(20px,3vw,28px);

@@ -242,22 +242,11 @@ p:last-child{ margin-bottom:0 }
 }
 
 .brand{ display:inline-flex; align-items:center; gap:11px; margin-right:auto }
-.brand__mark{ width:38px; height:38px; flex:none }
-.brand__mark svg{ width:100%; height:100%; fill:none; stroke:var(--gold); stroke-width:1.5; stroke-linecap:round }
-.brand__mark rect{ stroke-width:1.2; opacity:.85 }
-.brand__type{ display:flex; flex-direction:column; line-height:1.1 }
-.brand__type[alt]{ 
+/* The logo is a single image in both header and footer. [alt] targets the
+   <img> specifically, so the rule cannot apply to a text-based fallback. */
+.brand__type[alt]{
   width:auto; height:auto; max-width:240px; max-height:80px;
-  display:block; flex-direction:initial;
-}
-.brand__name{
-  font-family: "Cloudster", sans-serif; font-weight:400; font-size:16px;
-  text-transform:uppercase; letter-spacing:.12em; color:var(--cream); font-feature-settings:'liga';
-}
-.brand__sub{
-  font-family:var(--f-disp); font-weight:500; font-size:11px;
-  text-transform:uppercase; letter-spacing:.10em; color:var(--gold);
-  margin-top:3px;
+  display:block;
 }
 
 .nav{ display:flex; align-items:center; gap:30px }
@@ -944,7 +933,9 @@ p:last-child{ margin-bottom:0 }
   transition:color .22s var(--ease);
 }
 .footer ul a:hover{ color:var(--gold) }
-.brand--footer .brand__mark{ width:42px; height:42px }
+/* slightly smaller in the footer than the header
+   — it is a sign-off there, not the primary identifier */
+.brand--footer .brand__type[alt]{ max-width:200px; max-height:66px }
 
 .footer__base{
   display:flex; align-items:center; justify-content:space-between; gap:16px;

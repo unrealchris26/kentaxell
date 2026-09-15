@@ -1,0 +1,76 @@
+Attached Element Context from Integrated Browser
+
+Element: section#shows.sec.sec--tight.shows
+
+URL: http://127.0.0.1:8181/#intro
+
+HTML Path: main#main > section#shows.sec.sec--tight.shows
+
+Outer HTML:
+```html
+<section class="sec sec--tight shows" id="shows">
+  <div class="wrap">
+    <div class="reelgrid">
+
+      <a class="reel reveal in" href="#contact">
+        <img src="assets/img/stage-volunteers.jpg" alt="Kent Axell on stage with two volunteers seated beside him" loading="lazy">
+        <span class="reel__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"></path></svg></span>
+        <span class="reel__label">Kent Axell — Stage Show</span>
+      </a>
+
+      <a class="reel reveal in" data-d="2" href="#contact">
+        <img src="assets/img/theater-volunteers.jpg" alt="Kent Axell performing with volunteers on a theatre stage" loading="lazy">
+        <span class="reel__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"></path></svg></span>
+        <span class="reel__label">Mind the Gap — Full Evening</span>
+      </a>
+
+      <a class="reel reveal in" data-d="3" href="#contact">
+        <img src="assets/img/closeup-bar.jpg" alt="Kent Axell performing close-up magic for two laughing guests at a bar" loading="lazy">
+        <span class="reel__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"></path></svg></span>
+        <span class="reel__label">Strolling &amp; Close-Up — Trailer</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+```
+
+Dimensions:
+- top: 589px
+- left: 0px
+- width: 1378px
+- height: 341px
+
+CSS:
+```css
+*, *::before, *::after { box-sizing:border-box }
+.sec { padding-block:clamp(64px,9vw,118px) }
+.sec--tight { padding-top:0 }
+
+/* Pseudo-elements */
+::selection { background:var(--gold); color:var(--ink) }
+
+/* Inherited */
+body { color:var(--cream); font-family:var(--f-body); font-size:16px; line-height:1.68; font-weight:400 }
+
+/* Resolved values */
+box-sizing: border-box;
+color: rgb(244, 239, 228);
+display: block;
+font-family: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+font-size: 16px;
+font-weight: 400;
+height: 341.328px;
+line-height: 26.88px;
+padding-block-end: 118px;
+padding-block-start: 0px;
+padding-top: 0px;
+unicode-bidi: isolate /*UA*/;
+width: 1378px;
+
+/* CSS variables */
+--gold: #D9A94B;
+--f-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+--cream: #F4EFE4;
+--ink: #0B120E;
+```

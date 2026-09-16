@@ -88,11 +88,11 @@
 
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
-  <!-- Background loop (~5.3MB, H.264, audio stripped, faststart). The source
-       is attached by main.js rather than sitting here as a <source>: it is
-       still too heavy to push at every visitor, so it is fetched only on a
-       wide viewport, with no reduced-motion preference, and Save-Data off.
-       Everywhere else the poster still image carries the hero unchanged. -->
+  <!-- Background loop (~5.3MB, H.264, audio stripped, faststart). Plays on
+       every viewport including phones. The source is attached by main.js
+       rather than sitting here as a <source> so it loads after the poster has
+       painted, and so it can be skipped for reduced-motion and Save-Data
+       visitors, who keep the poster still instead. -->
   <div class="hero__media">
     <video class="hero__video" id="heroVideo"
            muted loop playsinline preload="none" tabindex="-1"

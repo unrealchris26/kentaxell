@@ -8,17 +8,17 @@
 
 
   /* ── hero background loop ────────────────── */
-  /* The file is ~5.3MB, so it is not in the markup as a <source>. It is
-     attached here only when playing it is clearly the right call: a wide
-     viewport, no reduced-motion preference, and Save-Data off. Otherwise the
-     poster still carries the hero and nothing is downloaded. */
+  /* The file (~5.3MB) is attached here rather than sitting in the markup as a
+     <source>, so the two cases that should never pay for it still don't:
+     a reduced-motion preference, and Save-Data / 2G. Phones DO get it — that
+     is deliberate — but they get it after the poster has already painted, so
+     the hero is never blank while it loads. */
   var heroVideo = document.getElementById('heroVideo');
   if (heroVideo) {
     var conn = navigator.connection || {};
-    var wide = window.matchMedia('(min-width: 821px)').matches;
     var thrifty = conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || '');
 
-    if (wide && !reduced && !thrifty) {
+    if (!reduced && !thrifty) {
       heroVideo.src = heroVideo.dataset.src;
       heroVideo.load();
       var play = heroVideo.play();

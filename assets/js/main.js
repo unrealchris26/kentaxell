@@ -8,7 +8,7 @@
 
 
   /* ── hero background loop ────────────────── */
-  /* The file is ~8.5MB, so it is not in the markup as a <source>. It is
+  /* The file is ~5.3MB, so it is not in the markup as a <source>. It is
      attached here only when playing it is clearly the right call: a wide
      viewport, no reduced-motion preference, and Save-Data off. Otherwise the
      poster still carries the hero and nothing is downloaded. */

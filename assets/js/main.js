@@ -6,6 +6,37 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+
+  /* ── hero background loop ────────────────── */
+  /* The file is ~8.5MB, so it is not in the markup as a <source>. It is
+     attached here only when playing it is clearly the right call: a wide
+     viewport, no reduced-motion preference, and Save-Data off. Otherwise the
+     poster still carries the hero and nothing is downloaded. */
+  var heroVideo = document.getElementById('heroVideo');
+  if (heroVideo) {
+    var conn = navigator.connection || {};
+    var wide = window.matchMedia('(min-width: 821px)').matches;
+    var thrifty = conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || '');
+
+    if (wide && !reduced && !thrifty) {
+      heroVideo.src = heroVideo.dataset.src;
+      heroVideo.load();
+      var play = heroVideo.play();
+      // Autoplay can still be refused; the poster is already correct if so.
+      if (play && play.catch) play.catch(function () {});
+
+      // Nothing to render while the hero is off screen.
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { var p = heroVideo.play(); if (p && p.catch) p.catch(function () {}); }
+            else heroVideo.pause();
+          });
+        }, { threshold: 0 }).observe(heroVideo);
+      }
+    }
+  }
+
   /* ── sticky header state ─────────────────── */
   var header = document.getElementById('header');
   var onScroll = function () {

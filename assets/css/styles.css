@@ -282,11 +282,32 @@ p:last-child{ margin-bottom:0 }
   overflow:hidden;
 }
 .hero__media{ position:absolute; inset:0 }
-.hero__media img{
+/* ── hero background loop ──────────────────────────────── */
+/* Sits furthest back and deliberately dim: it is texture behind Kent, not
+   something to watch. The poster image shows at the same opacity when the
+   video never loads, so the hero reads identically either way. */
+.hero__video{
   width:100%; height:100%; object-fit:cover; object-position:center 32%;
-  animation:heroDrift 26s var(--ease) infinite alternate;
+  opacity:.34;
+  filter:saturate(.85);
+  pointer-events:none;
 }
-@keyframes heroDrift{ from{ transform:scale(1.04) } to{ transform:scale(1.12) } }
+/* ── Kent, centred ─────────────────────────────────────── */
+.hero__figure{
+  position:absolute; inset:0;
+  display:flex; align-items:flex-end; justify-content:center;
+  pointer-events:none;
+}
+.hero__figure img{
+  height:min(96%, 860px); width:auto; max-width:92vw;
+  object-fit:contain; object-position:bottom center;
+  /* the cut-out carries its own glow, so this only grounds him */
+  filter:drop-shadow(0 26px 46px rgba(0,0,0,.55));
+}
+@media (max-width:820px){
+  .hero__figure img{height:min(74%, 620px)}
+}
+
 
 .hero__scrim{
   position:absolute; inset:0;
@@ -1123,7 +1144,9 @@ p:last-child{ margin-bottom:0 }
   }
   .reveal{ opacity:1; transform:none }
   .marquee__track{ animation:none }
-  .hero__media img{ animation:none; transform:scale(1.04) }
+  /* main.js never attaches the video source under reduced motion, so the
+     poster still is what shows here — nothing left to stop. */
+  .hero__video{ opacity:.34 }
 }
 
 /* ═══════════ PRINT ═══════════ */

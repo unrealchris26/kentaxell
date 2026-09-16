@@ -88,9 +88,25 @@
 
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
+  <!-- Background loop. The source is attached by main.js, not by the markup:
+       the file is large, so it is only fetched on a wide viewport, when the
+       visitor has not asked for reduced motion, and when Save-Data is off.
+       Everywhere else the poster still image is what shows, and the hero
+       looks the same as it always did. -->
   <div class="hero__media">
-    <img src="assets/img/hero-stage.jpg" alt="Kent Axell on stage with arms outstretched under blue theatrical light" fetchpriority="high">
+    <video class="hero__video" id="heroVideo"
+           muted loop playsinline preload="none" tabindex="-1"
+           poster="assets/img/hero-stage.jpg"
+           data-src="assets/video/hero-loop.mp4"
+           aria-hidden="true"></video>
   </div>
+
+  <!-- Kent, centred, sitting above the loop but under the scrim so the
+       gradient darkens his legs exactly where the headline sits. -->
+  <div class="hero__figure" aria-hidden="true">
+    <img src="assets/img/kent-hero-cutout.png" alt="" width="1024" height="1536" fetchpriority="high" decoding="async">
+  </div>
+
   <div class="hero__scrim"></div>
 
   <div class="wrap hero__in">

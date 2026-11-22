@@ -4,17 +4,23 @@
    Vercel Function, served at /api/lead. Both site forms POST JSON here.
    The token never reaches the browser.
 
-   Required environment variables (set in Vercel → Project → Settings →
-   Environment Variables, or in a local .env for `vercel dev`):
+   Environment variables (set in Vercel → Project → Settings → Environment
+   Variables, or in a local .env for `vercel dev`). Configure either route,
+   or both:
 
+   Webhook route — a GHL workflow with an Inbound Webhook trigger receives
+   every submission and creates the contact itself:
+     GHL_WEBHOOK_URL  The trigger URL. Keep it out of the repo: anyone who has
+                      it can post fake leads.
+
+   API route — the contact is upserted directly, no workflow needed:
      GHL_TOKEN        Private Integration token, scopes: contacts.write,
                       contacts.readonly
      GHL_LOCATION_ID  Sub-account (location) ID
 
-   Optional:
-     GHL_WEBHOOK_URL  Inbound-webhook trigger URL. If set, the payload is
-                      mirrored to it after the contact upsert, so a workflow
-                      can react to fields that are not stored on the contact.
+   With both set, the contact is upserted first and the webhook then gets a
+   copy (including contactId); a webhook failure is only logged. With only the
+   webhook set, a webhook failure fails the request so the visitor is told.
    ═══════════════════════════════════════════ */
 
 const GHL_API = 'https://services.leadconnectorhq.com';
@@ -60,8 +66,9 @@ const splitName = (full) => {
    gets an automatic 405. */
 export async function POST(req) {
   const { GHL_TOKEN, GHL_LOCATION_ID, GHL_WEBHOOK_URL } = process.env;
-  if (!GHL_TOKEN || !GHL_LOCATION_ID) {
-    console.error('lead: GHL_TOKEN or GHL_LOCATION_ID is not set');
+  const useApi = Boolean(GHL_TOKEN && GHL_LOCATION_ID);
+  if (!useApi && !GHL_WEBHOOK_URL) {
+    console.error('lead: set GHL_WEBHOOK_URL, or GHL_TOKEN and GHL_LOCATION_ID');
     return json({ error: 'not configured' }, 500);
   }
 
@@ -117,47 +124,71 @@ export async function POST(req) {
     customFields
   };
 
-  const res = await fetch(`${GHL_API}/contacts/upsert`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${GHL_TOKEN}`,
-      Version: GHL_VERSION,
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
+  let contactId;
+  if (useApi) {
+    const res = await fetch(`${GHL_API}/contacts/upsert`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GHL_TOKEN}`,
+        Version: GHL_VERSION,
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    /* Log the body — GHL returns the offending field name, which is the only
-       way to tell a bad custom-field key from a bad token. */
-    console.error('lead: GHL upsert failed', res.status, await res.text());
-    return json({ error: 'upstream' }, 502);
+    if (!res.ok) {
+      /* Log the body — GHL returns the offending field name, which is the
+         only way to tell a bad custom-field key from a bad token. */
+      console.error('lead: GHL upsert failed', res.status, await res.text());
+      return json({ error: 'upstream' }, 502);
+    }
+
+    const contact = await res.json().catch(() => ({}));
+    contactId = contact?.contact?.id;
   }
 
-  const contact = await res.json().catch(() => ({}));
-
-  /* Optional mirror to an Inbound Webhook workflow trigger. Failure here must
-     not fail the request — the contact already exists at this point. */
   if (GHL_WEBHOOK_URL) {
+    const now = new Date().toISOString();
+    /* Flat, already-cleaned fields so the workflow can map each one directly
+       in its Create/Update Contact step. */
+    const hook = {
+      email,
+      firstName,
+      lastName,
+      fullName: clean(d.name),
+      phone: payload.phone,
+      source: payload.source,
+      formType: isNewsletter ? 'newsletter' : 'booking',
+      tags: tags.join(','),
+      eventDate: clean(d.date),
+      eventType: clean(d.type),
+      eventDetails: clean(d.message),
+      page: clean(d.page),
+      contactId,
+      /* Consent evidence: you must be able to show WHAT was consented to
+         and WHEN. Persist these fields wherever the webhook lands. */
+      marketingConsent,
+      consentRecordedAt: now,
+      receivedAt: now
+    };
+
+    let ok = false;
     try {
-      await fetch(GHL_WEBHOOK_URL, {
+      const r = await fetch(GHL_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...d,
-          phone: payload.phone,
-          contactId: contact?.contact?.id,
-          /* Consent evidence: you must be able to show WHAT was consented to
-             and WHEN. Persist these two fields wherever the webhook lands. */
-          marketingConsent,
-          consentRecordedAt: new Date().toISOString(),
-          receivedAt: new Date().toISOString()
-        })
+        body: JSON.stringify(hook)
       });
+      ok = r.ok;
+      if (!ok) console.error('lead: webhook failed', r.status, await r.text());
     } catch (err) {
-      console.error('lead: webhook mirror failed', err);
+      console.error('lead: webhook failed', err);
     }
+
+    /* Webhook-only: it is the sole record of the lead, so a failure must
+       reach the visitor. With the API route the contact already exists. */
+    if (!ok && !useApi) return json({ error: 'upstream' }, 502);
   }
 
   return json({ ok: true });

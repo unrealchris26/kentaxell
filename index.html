@@ -35,6 +35,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
+<!-- Vercel Web Analytics: cookieless, no local storage. Requires Analytics
+     to be enabled on the Vercel project, or the script 404s harmlessly. -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -639,7 +643,7 @@
       </div>
     </div>
 
-    <!-- Posts JSON to /.netlify/functions/lead, which upserts the
+    <!-- Posts JSON to /api/lead, which upserts the
          contact into GoHighLevel. Wiring lives in assets/js/main.js. -->
     <form class="book__form reveal" data-d="2" novalidate>
     <!-- Honeypot. Hidden from people and assistive tech; bots fill it,

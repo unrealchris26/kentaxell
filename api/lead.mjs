@@ -1,10 +1,11 @@
 /* ═══════════════════════════════════════════
    Lead intake → GoHighLevel (LeadConnector API v2)
 
-   Both site forms POST JSON here. The token never reaches the browser.
+   Vercel Function, served at /api/lead. Both site forms POST JSON here.
+   The token never reaches the browser.
 
-   Required environment variables (set in Netlify → Site configuration →
-   Environment variables, or in a local .env for `netlify dev`):
+   Required environment variables (set in Vercel → Project → Settings →
+   Environment Variables, or in a local .env for `vercel dev`):
 
      GHL_TOKEN        Private Integration token, scopes: contacts.write,
                       contacts.readonly
@@ -55,9 +56,9 @@ const splitName = (full) => {
   return { firstName: parts.shift(), lastName: parts.join(' ') || undefined };
 };
 
-export default async (req) => {
-  if (req.method !== 'POST') return json({ error: 'method not allowed' }, 405);
-
+/* Web-standard handler: Vercel routes POST /api/lead here; any other method
+   gets an automatic 405. */
+export async function POST(req) {
   const { GHL_TOKEN, GHL_LOCATION_ID, GHL_WEBHOOK_URL } = process.env;
   if (!GHL_TOKEN || !GHL_LOCATION_ID) {
     console.error('lead: GHL_TOKEN or GHL_LOCATION_ID is not set');
@@ -160,4 +161,4 @@ export default async (req) => {
   }
 
   return json({ ok: true });
-};
+}

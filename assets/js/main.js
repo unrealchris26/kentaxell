@@ -137,8 +137,8 @@
 
   /* ── forms ────────────────────────────────────────
      Both POST JSON to the serverless handler, which talks to GoHighLevel.
-     See netlify/functions/lead.mjs. Change ENDPOINT if you host elsewhere.  */
-  var ENDPOINT = '/.netlify/functions/lead';
+     See api/lead.mjs (a Vercel Function). Change ENDPOINT if you host elsewhere. */
+  var ENDPOINT = '/api/lead';
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   var collect = function (form) {

@@ -1,0 +1,10 @@
+# Files that must never be served. The site deploys from the repo root, so
+# without this everything here would be publicly readable.
+.env*
+README.md
+netlify/
+netlify.toml
+serve.cmd
+tools/
+.impeccable/
+assets/img/opt/
